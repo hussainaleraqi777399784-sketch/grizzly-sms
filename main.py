@@ -13,9 +13,17 @@ def health():
 @app.route("/", methods=["POST"])
 def webhook():
     data = request.get_json(silent=True) or request.form.to_dict() or request.args.to_dict()
-    phone = data.get("phone") or data.get("phoneNumber") or data.get("number") or data.get("to") or ""
-    text = data.get("message") or data.get("text") or data.get("body") or data.get("msg") or data.get("sms") or data.get("content") or ""
-    # التطبيق يرسل الرقم داخل msg بهذا الشكل: From: 785786237\nالرسالة
+    phone = data.get("phone") or data.get("phoneNumber") or data.get("number") or data.get("from") or ""
+text = data.get("text") or data.get("msg") or data.get("message") or ""
+if phone in ("{from}", "text-", "", None):
+    phone = ""
+if text and "From" in text:
+    try:
+        first_line = text.split("\n")[0]
+        phone = first_line.replace("From", "").replace(":", "").strip()
+        text = text.split("\n", 1)[1] if "\n" in text else ""
+    except:
+        pass
     if text.startswith("From:"):
         parts = text.split("\n", 1)
         if len(parts) == 2:
