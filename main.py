@@ -24,11 +24,7 @@ if text and "From" in text:
         text = text.split("\n", 1)[1] if "\n" in text else ""
     except:
         pass
-    if text.startswith("From:"):
-        parts = text.split("\n", 1)
-        if len(parts) == 2:
-            phone = parts[0].replace("From:", "").strip()
-            text = parts[1].strip()
+    
     print(f"RECEIVED phone={phone} text={text}", flush=True)
     print(f"RAW DATA: {data}", flush=True)
     if phone and text and GRIZZLY_API_KEY:
