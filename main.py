@@ -13,8 +13,14 @@ def health():
 @app.route("/", methods=["POST"])
 def webhook():
     data = request.get_json(silent=True) or request.form.to_dict() or request.args.to_dict()
-    phone = data.get("phone") or data.get("phoneNumber") or data.get("phone_number") or data.get("number") or data.get("to") or data.get("from") or ""
+        phone = data.get("phone") or data.get("phoneNumber") or data.get("number") or data.get("to") or ""
     text = data.get("message") or data.get("text") or data.get("body") or data.get("msg") or data.get("sms") or data.get("content") or ""
+    # التطبيق يرسل الرقم داخل msg بهذا الشكل: From: 785786237\nالرسالة
+    if text.startswith("From:"):
+        parts = text.split("\n", 1)
+        if len(parts) == 2:
+            phone = parts[0].replace("From:", "").strip()
+            text = parts[1].strip()
     print(f"RECEIVED phone={phone} text={text}", flush=True)
     print(f"RAW DATA: {data}", flush=True)
     if phone and text and GRIZZLY_API_KEY:
