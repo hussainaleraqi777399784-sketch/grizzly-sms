@@ -16,7 +16,7 @@ def webhook():
     phone = data.get("phone") or data.get("phoneNumber") or data.get("phone_number") or data.get("number") or data.get("to") or data.get("from") or ""
     text = data.get("message") or data.get("text") or data.get("body") or data.get("msg") or data.get("sms") or data.get("content") or ""
     print(f"RECEIVED phone={phone} text={text}", flush=True)
-if phone and text and GRIZZLY_API_KEY:
+    if phone and text and GRIZZLY_API_KEY:
         try:
             payload = {"key": GRIZZLY_API_KEY, "phone": phone, "number": phone, "message": text, "text": text}
             requests.post(GRIZZLY_SMS_URL, json=payload, timeout=10)
