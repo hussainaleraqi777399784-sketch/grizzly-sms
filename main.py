@@ -13,7 +13,7 @@ def health():
 @app.route("/", methods=["POST"])
 def webhook():
     data = request.get_json(silent=True) or request.form.to_dict() or request.args.to_dict()
-    phone = data.get("phone") or data.get("number") or data.get("to") or data.get("from") or ""
+    phone = data.get("phone") or data.get("phoneNumber") or data.get("phone_number") or data.get("number") or data.get("to") or data.get("from") or ""
     text = data.get("message") or data.get("text") or data.get("body") or ""
     if phone and text and GRIZZLY_API_KEY:
         try:
