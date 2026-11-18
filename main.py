@@ -13,37 +13,28 @@ def home():
 def webhook():
 
     data = request.get_json(silent=True) or {}
-
-    params = request.values
-
-    print("========== NEW SMS ==========", flush=True)
-    print("METHOD:", request.method, flush=True)
-    print("PARAMETERS:", params.to_dict(), flush=True)
-    print("JSON DATA:", data, flush=True)
+    payload = data.get("payload") or {}
 
     phone = (
-        params.get("from")
-        or params.get("phone")
-        or params.get("sender")
-        or data.get("from")
-        or data.get("phone")
-        or data.get("sender")
+        payload.get("phoneNumber")
+        or payload.get("sender")
+        or request.values.get("from")
+        or request.values.get("phone")
         or ""
     )
 
     message = (
-        params.get("msg")
-        or params.get("text")
-        or params.get("message")
-        or data.get("msg")
-        or data.get("text")
-        or data.get("message")
+        payload.get("message")
+        or request.values.get("msg")
+        or request.values.get("text")
+        or request.values.get("message")
         or ""
     )
 
-    print(f"RECEIVED phone={phone}", flush=True)
-    print(f"RECEIVED text={message}", flush=True)
-    print("==============================", flush=True)
+    print("========== NEW SMS ==========", flush=True)
+    print(f"PHONE: {phone}", flush=True)
+    print(f"MESSAGE: {message}", flush=True)
+    print("=============================", flush=True)
 
     return jsonify({
         "status": "success",
